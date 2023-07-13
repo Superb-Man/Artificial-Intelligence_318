@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/3-2/AI-318/Offline-1",
-      "program": "d:/3-2/AI-318/Offline-1/build/Debug/outDebug",
+      "cwd": "d:/3-2/AI-318/Artificial-Intelligence_318/Offline-1",
+      "program": "d:/3-2/AI-318/Artificial-Intelligence_318/Offline-1/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
