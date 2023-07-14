@@ -16,13 +16,13 @@ int main() {
     if(op == 2) {
         std::string name ;
         int player_id ;
-        std::cin >> name >> player_id ; //Give 1 doesn't matter
-        player1 = new human(name, player_id) ;
+        std::cin >> name ; ; //Give 1 doesn't matter
+        player1 = new human(name, 1) ;
     }
     else {
-        player1 = new computerBot(13,1,"AI_Toriqe",1) ;
+        player1 = new computerBot(12,1,"AI_BOLOD",1) ;
     }
-    playerInterface* player2 = new computerBot(9,2,"AI_Lara",2) ;
+    playerInterface* player2 = new computerBot(12,2,"AI_CHAGOL",2) ;
 
     std::cout << "Starting game"<<std::endl;
     std::cout << "First player is " << player1->getName() << std::endl;
@@ -47,6 +47,7 @@ int main() {
         // std::cout << move.second <<"   MOVE COLUMN" <<'\n';
         // std::cout <<player << "        Player"<<'\n' ;
         // std::cout <<mancala.cur_player <<"        Mancala_player" << '\n' ;
+        std::cout << "Selected column :  " << move.second << '\n' ;
         lastState ls = mancala.changeState(move.second) ;
 
         //now need to check if it is normal, bonus or extra
@@ -74,6 +75,9 @@ int main() {
         player = mancala.cur_player ;
 
         cc++ ;
+        if(mancala.getTotStoneCount(1) >=25 or mancala.getTotStoneCount(2) >=25) {
+            break ;
+        }
        // if(cc == 20 ) break ;
 
 

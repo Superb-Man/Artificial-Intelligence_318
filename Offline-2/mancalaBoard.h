@@ -44,9 +44,12 @@ private:
     }
 
     void move(int& stones , int& row, int& col , int& direction, int& prev_stones) {
-        for(int j = 0 ; j < stones ; j++) {
+        for(int j = 0 ; j < stones ;) {
             if(chk(col+direction)) {
-                target_pot[cur_player%mod]++ ;  //putting a stone in targeting pot
+                if((row+1)%mod != cur_player %mod){
+                    target_pot[cur_player%mod]++ ;  //putting a stone in targeting pot
+                    j++ ;
+                }
                 row = (row + 1)%mod ;    //going to another player's territory
                 col+=direction ;         //increasing/decreasing column
                 direction = -direction ; //direction reversing
@@ -55,6 +58,7 @@ private:
                 prev_stones = game_board[row%mod][col+direction] ;
                 game_board[row%mod][col+direction]++ ;
                 col+=direction ;
+                j++ ;
             }
         }
         stones = 0 ;
@@ -99,6 +103,7 @@ public:
 
 
     bool gameEnded() { //if any of the row become 0 the game ends!
+        if(target_pot[1] >= 25 or target_pot[0] >= 25) return true ;
         return (counnt(1) == 0 ? true : (counnt(2) == 0 ? true : false)) ;
     }
 

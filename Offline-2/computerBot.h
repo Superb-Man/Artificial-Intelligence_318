@@ -7,23 +7,23 @@ int W1,W2,W3,W4 ;
 
 int heurisric1(mancalaBoard& mancala , int addtitional = 0 ) {
     W1 = 1 ;
-    return W1*(mancala.getTotStoneCount(mancala.cur_player) - mancala.getTotStoneCount((mancala.cur_player == 2) ? 1 : 2)) ;
+    return W1*(mancala.getTotStoneCount(2) - mancala.getTotStoneCount(1)) ;
 }
 
 int heurisric2(mancalaBoard& mancala , int addtitional = 0 ) {
     int opponent = (mancala.cur_player == 2) ? 1 : 2 ;
     W1 = 10 ,W2 = 1  ;
 
-    return W1 * (mancala.getTotStoneCount(mancala.cur_player) - mancala.getTotStoneCount(opponent))
-            + W2 * (mancala.ownSideStones(mancala.cur_player) - mancala.ownSideStones(opponent))  ;
+    return W1 * (mancala.getTotStoneCount(2) - mancala.getTotStoneCount(1))
+            + W2 * (mancala.ownSideStones(2) - mancala.ownSideStones(1))  ;
 }
 
 int heuristic3(mancalaBoard& mancala , int additional = 0 ) {
     int opponent = (mancala.cur_player == 2) ? 1 : 2 ;
     W1 = 10 ,W2 = 2 ,W3 = 1 ;
 
-    return W1 * (mancala.getTotStoneCount(mancala.cur_player) - mancala.getTotStoneCount(opponent))
-            + W2 * (mancala.ownSideStones(mancala.cur_player) - mancala.ownSideStones(opponent))
+    return W1 * (mancala.getTotStoneCount(2) - mancala.getTotStoneCount(1))
+            + W2 * (mancala.ownSideStones(2) - mancala.ownSideStones(1))
             + W3 * additional ;
 }
 
@@ -49,19 +49,19 @@ private:
      * @return std::pair<int,int> first one is to define alpha or beta, 2nd one is column for nextState of mancala to move!
      */
     std::pair<int,int> search(mancalaBoard& mancala,int alpha ,int beta , int depth, int additional) {
+
+        if(mancala.gameEnded()) {
+            //reached to the end of mancala,
+            //just return the scores with final winning configuration
+            std::pair<int,int> p = mancala.getScore() ;
+            return std::make_pair((p.first - p.second) , -1) ;
+        }
         if(depth == max_depth) {
             //reached to leaves states!
             //Now use the heuristic
             //But the column is not yet fixed
 
             return std::make_pair(heuristics[heuristic_id](mancala , additional) , -1) ;
-        }
-
-        if(mancala.gameEnded()) {
-            //reached to the end of mancala,
-            //just return the scores with final winning configuration
-            std::pair<int,int> p = mancala.getScore() ;
-            return std::make_pair(p.first - p.second , -1) ;
         }
 
         //set the alpha beta to MIN_INT and MAX_INT at every depth while preorder traverse according to player move
@@ -96,7 +96,7 @@ private:
 
             //if the current_player and the new_mancala player same then add
             if(new_mc.cur_player == mancala.cur_player) {
-                add+=(mancala.cur_player == 1) ? 1 : -1 ;
+                add+=(mancala.cur_player == 1 ? +1 : -1) ;
             }
 
             //calling recursively
@@ -104,12 +104,12 @@ private:
 
             if(mancala.cur_player == 1) {
                 //max for player 1
-                parent_alphaBeta = (parent_alphaBeta.first <= child.first) ? std::make_pair(child.first,strt) : parent_alphaBeta ;
+                parent_alphaBeta = (parent_alphaBeta.first < child.first) ? std::make_pair(child.first,strt) : parent_alphaBeta ;
                 alpha = (alpha > parent_alphaBeta.first ) ? alpha : parent_alphaBeta.first ;
             }
 
             else {
-                parent_alphaBeta = (parent_alphaBeta.first >= child.first) ? std::make_pair(child.first , strt) : parent_alphaBeta ;
+                parent_alphaBeta = (parent_alphaBeta.first > child.first) ? std::make_pair(child.first , strt) : parent_alphaBeta ;
                 beta = (beta < parent_alphaBeta.first ) ? beta : parent_alphaBeta.first ;
             }
 
