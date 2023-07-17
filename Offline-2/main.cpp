@@ -6,23 +6,26 @@
 #include<windows.h>
 
 int main() {
-    playerInterface* player1 ;
+    playerInterface* player2 ;
 
     std :: cout << "Choose AI vs AI -------->[ 1 ] "<< std:: endl;
     std:: cout << "Choose AI vs Human--------->[ 2 ]" << std :: endl;
 
+    mancalaBoard mancala ;
+    //printBoard(mancala) ;
+    int player = mancala.cur_player ;
     int op ;
     std :: cin >> op ;
     if(op == 2) {
         std::string name ;
         int player_id ;
         std::cin >> name ; ; //Give 1 doesn't matter
-        player1 = new human(name, 1) ;
+        player2 = new human(name, 1) ;
     }
     else {
-        player1 = new computerBot(12,1,"AI_BOLOD",1) ;
+        player2 = new computerBot(12,4,"AI_BOLOD",1) ;
     }
-    playerInterface* player2 = new computerBot(12,2,"AI_CHAGOL",2) ;
+    playerInterface* player1 = new computerBot(9,4,"AI_CHAGOL",2) ;
 
     std::cout << "Starting game"<<std::endl;
     std::cout << "First player is " << player1->getName() << std::endl;
@@ -30,11 +33,6 @@ int main() {
 
 
     //mancala running
-
-    mancalaBoard mancala ;
-    //printBoard(mancala) ;
-
-    int player = mancala.cur_player ;
     print(mancala) ;
 
     int cc= 0 ;

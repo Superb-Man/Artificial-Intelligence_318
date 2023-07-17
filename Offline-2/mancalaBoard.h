@@ -12,6 +12,7 @@ struct lastState{
     int row ;
     int col ; ;
     int state ;
+    int captured ;
 
     lastState() {
         row = col = 0  ;
@@ -103,7 +104,7 @@ public:
 
 
     bool gameEnded() { //if any of the row become 0 the game ends!
-        if(target_pot[1] >= 25 or target_pot[0] >= 25) return true ;
+        //if(target_pot[1] >= 25 or target_pot[0] >= 25) return true ;
         return (counnt(1) == 0 ? true : (counnt(2) == 0 ? true : false)) ;
     }
 
@@ -170,6 +171,7 @@ public:
      * @return tupple
      */
     lastState& changeState(int col) {
+        ls.captured = 0 ;
         col-- ;
         int row = cur_player ;
         int stones = game_board[row%mod][col] ;
@@ -179,6 +181,7 @@ public:
         int direction = (cur_player == 1 ? 1 : -1) ;
         int prev_stones = -1 ;
         int init_dir = direction ;
+        int captured = target_pot[0] ;
 
 
         move(stones, row, col, direction, prev_stones) ;
@@ -189,7 +192,7 @@ public:
         }
         // (row == (cur_player == 1) ? 1 : 0)
         else if(row%mod == cur_player%mod && game_board[row%mod][col] == 1 && game_board[(row+1)%mod][col] > 0) { //Stealing the opponets stones!!RULE 2
-
+            ls.captured = (row == 1 ? game_board[2%mod][col] : 0) ;
             target_pot[row%mod]+=game_board[row%mod][col] + game_board[(row+1)%mod][col] ;
             //now collecting all the stones of those two cell
             game_board[row%mod][col] = game_board[(row+1)%mod][col] = 0 ;
@@ -202,7 +205,6 @@ public:
             cur_player = (cur_player == 1) ? 2 : 1 ;//Switching player
             ls.row = row%mod ; ls.col = col ; ls.state = NORMAL ;
         }
-
         return ls ;
 
 
@@ -219,8 +221,7 @@ public:
         std::cout << target_pot[1] <<"\n" << target_pot[0] << '\n' ;
     }
 
-
-
-
-
+    int getCaptured(){
+        return ls.captured ;
+    }
 } ;

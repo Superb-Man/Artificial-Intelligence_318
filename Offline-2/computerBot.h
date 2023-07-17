@@ -12,7 +12,7 @@ int heurisric1(mancalaBoard& mancala , int addtitional = 0 ) {
 
 int heurisric2(mancalaBoard& mancala , int addtitional = 0 ) {
     int opponent = (mancala.cur_player == 2) ? 1 : 2 ;
-    W1 = 10 ,W2 = 1  ;
+    W1 = 40 ,W2 = 30  ;
 
     return W1 * (mancala.getTotStoneCount(2) - mancala.getTotStoneCount(1))
             + W2 * (mancala.ownSideStones(2) - mancala.ownSideStones(1))  ;
@@ -20,17 +20,30 @@ int heurisric2(mancalaBoard& mancala , int addtitional = 0 ) {
 
 int heuristic3(mancalaBoard& mancala , int additional = 0 ) {
     int opponent = (mancala.cur_player == 2) ? 1 : 2 ;
-    W1 = 10 ,W2 = 2 ,W3 = 1 ;
+    W1 = 40 ,W2 = 30 ,W3 = 20 ;
 
     return W1 * (mancala.getTotStoneCount(2) - mancala.getTotStoneCount(1))
             + W2 * (mancala.ownSideStones(2) - mancala.ownSideStones(1))
             + W3 * additional ;
 }
 
+int heuristic4(mancalaBoard& mancala , int additional = 0 ) {
+    int opponent = (mancala.cur_player == 2) ? 1 : 2 ;
+    W1 = 40 ,W2 = 30 ,W3 = 50 ,W4 = 60 ;
+
+    return W1 * (mancala.getTotStoneCount(2) - mancala.getTotStoneCount(1))
+            + W2 * (mancala.ownSideStones(2) - mancala.ownSideStones(1))
+            + W3 * additional
+            + W4 * mancala.getCaptured() ;
+}
+
+
 static int (*heuristics[])(mancalaBoard& mancala, int additional) = {
 heurisric1,
 heurisric2,
 heuristic3,
+heuristic4,
+//heuristic5,
 };
 
 class computerBot : public playerInterface {
@@ -61,7 +74,7 @@ private:
             //Now use the heuristic
             //But the column is not yet fixed
 
-            return std::make_pair(heuristics[heuristic_id](mancala , additional) , -1) ;
+            return std::make_pair(heuristics[heuristic_id-1](mancala , additional) , -1) ;
         }
 
         //set the alpha beta to MIN_INT and MAX_INT at every depth while preorder traverse according to player move
@@ -73,6 +86,14 @@ private:
         //We need to consider the move of opponent
         //Thats why we will use the opposite
 
+        int arr[] = {1,2,3,4,5,6} ;
+        for (int i = 5; i >= 1; i--) {
+            int j = rand() % (i + 1);
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+
         int strt = (mancala.cur_player == 1) ? 6 : 1 ;
         int en = (mancala.cur_player == 1) ? 0 : 7 ;
         int dir = (mancala.cur_player == 1) ? -1 : 1 ;
@@ -82,14 +103,14 @@ private:
         while(strt != en) {
             // std::cout << col <<"  COLUMN IS ......" ;
             // std::cout << "Player is ......." << mancala.cur_player << '\n' ;
-            if(!mancala.canMove(strt)) {
+            if(!mancala.canMove(arr[strt-1])) {
                 strt+=dir ;
                 continue ;
             }
 
             //making a copy mancala
             mancalaBoard new_mc(mancala) ;
-            new_mc.changeState(strt) ;
+            new_mc.changeState(arr[strt-1]) ;
 
             //new_mc.print_board() ;
             int add = additional ;
@@ -104,12 +125,12 @@ private:
 
             if(mancala.cur_player == 1) {
                 //max for player 1
-                parent_alphaBeta = (parent_alphaBeta.first < child.first) ? std::make_pair(child.first,strt) : parent_alphaBeta ;
+                parent_alphaBeta = (parent_alphaBeta.first < child.first) ? std::make_pair(child.first,arr[strt-1]) : parent_alphaBeta ;
                 alpha = (alpha > parent_alphaBeta.first ) ? alpha : parent_alphaBeta.first ;
             }
 
             else {
-                parent_alphaBeta = (parent_alphaBeta.first > child.first) ? std::make_pair(child.first , strt) : parent_alphaBeta ;
+                parent_alphaBeta = (parent_alphaBeta.first > child.first) ? std::make_pair(child.first , arr[strt-1]) : parent_alphaBeta ;
                 beta = (beta < parent_alphaBeta.first ) ? beta : parent_alphaBeta.first ;
             }
 
