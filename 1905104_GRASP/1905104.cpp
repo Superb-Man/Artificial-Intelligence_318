@@ -6,7 +6,7 @@
 #define ll long long
 #define vertex ll
 #define MAX_RANGE 10005
-#define MAX_ITERATION 500
+#define MAX_ITERATION 50
 
 //variables
 ll w_min , w_max ;
@@ -282,7 +282,7 @@ int main() {
     // std::cout << ",Problem,,,Constructive algorithm,,Local Search,,GRASP," << std::endl ;
     // std::cout << "Name,V,E,Simple Randomized,Simple Greedy,Semi Greedy,,Simple local,,GRASP" << std::endl ;
     // std::cout << ",,,,,,No. of iterations,Best value,No. of iterations,Best value" << std::endl ;
-    for(ll z = 40 ; z <= 54 ;z++) {
+    for(ll z = 32 ; z <= 39 ;z++) {
         std::string name = "g"+std::to_string(z)+".rud" ;
         freopen(name.c_str(),"r",stdin) ;
 
