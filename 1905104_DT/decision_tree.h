@@ -5,7 +5,7 @@ typedef long long ll ;
 
 struct node{
     ll c_index ; //for attr_criteria_index
-    ll tree_indx ; // for depth level
+    ll tree_indx ; 
     std::string attr_val ; //for branching
     std::string result ; //for labeling
     std::vector<ll>children ; //for childlist
